@@ -103,7 +103,7 @@ double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){
     delta3 = opt_vertical(z_max, r2.latitude(), r2.longitude()) * t_R / 1e3;
 
     /*任意の2点の光学的深さ*/
-    double Delta = delta1 + delta2 + delta3;
+    double delta = delta1 + delta2 + delta3;
 
-    return Delta;
+    return delta;
 }
