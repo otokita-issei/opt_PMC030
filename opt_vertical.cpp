@@ -5,7 +5,7 @@
 #include "opt_vec.h"
 #include "pmc_simulation.h"
 
-double opt_vertical(int z, double Lat, double Lon){ 
+double opt_vertical(int z, double Lat, double Lon, double Lam, int Day){ 
     double lat_L = Lat;      /*任意の緯度*/
     int L_m = lat_L/10; 
     int Lm = L_m*10;  /*切り捨てたlat_L*/
@@ -13,7 +13,7 @@ double opt_vertical(int z, double Lat, double Lon){
     double L = lat_L;
     int N = z_km;
 
-    double t = Day_of_Year;
+    double t = Day;
     int t_n = t/10;
     int tn = t_n*10;
     int tn_1 = tn + 10;
