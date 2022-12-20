@@ -16,10 +16,10 @@ double Optical_depth(const double lambda, Date date, AndoLab::Vector3d <double> 
     double delta = opt_vec(r2, r1, Lambda, Day);
 
     /*Mie散乱の寄与*/
-    Region pmc_region = search_pmc_region(r2, r1);
-    for(int i = 0; i < pmc_region.num; i++){
-        delta += Mie_opt_depth(pmc_region.r_from[i], pmc_region.r_to[i], num_pmc, pmc);
-    }
+    // Region pmc_region = search_pmc_region(r2, r1);
+    // for(int i = 0; i < pmc_region.num; i++){
+    //     delta += Mie_opt_depth(pmc_region.r_from[i], pmc_region.r_to[i], num_pmc, pmc);
+    // }
 
     return delta;
 
