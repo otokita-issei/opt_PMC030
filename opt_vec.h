@@ -10,10 +10,10 @@ constexpr double inc_t = 10;    /*日にちの増加量*/
 constexpr double inc_L = 10;    /*緯度の増加量*/
 
 /*任意の2点間の光学的深さ*/
-double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1);
+double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1, double Lam, int Day);
 
 /*垂直に伝搬する2点間の光学的深さ*/
-double opt_vertical(int z, double Lat, double Lon);
+double opt_vertical(int z, double Lat, double Lon, double Lam, int Day);
 
 
 

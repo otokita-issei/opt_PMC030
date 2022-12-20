@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include "Vector3d.h"
-#include "opt_vec.h"
+#include <Vector3d.h>
+#include "Date.h"
 #include "Geoparameter.h"
+#include "opt_vec.h"
+#include "pmc.h"
+#include "pmc_simulation.h"
 
-double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){  
+double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1, const double Lam, int Day){  
     // AndoLab::Vector3d <double> r1;
     // AndoLab::Vector3d <double> r2;
     AndoLab::Vector3d <double> d;
@@ -44,12 +47,12 @@ double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){
         N_z = 0;
         xi0 = r2.r(); 
         t1 = -1.0*r1_d + std::sqrt(r1_d*r1_d + xi0*xi0 - r_1*r_1) - (-1.0*r1_d + std::sqrt(r1_d*r1_d)); /*[m]*/
-        delta1 = opt_vertical(z0-1, (r1.latitude() + r2.latitude())/2, (r1.longitude() + r2.longitude())/2) * t1 / 1e3; /*opt_vertical(z, Lat, Lon, date)*/
+        delta1 = opt_vertical(z0-1, (r1.latitude() + r2.latitude())/2, (r1.longitude() + r2.longitude())/2, Lam, Day) * t1 / 1e3; /*opt_vertical(z, Lat, Lon, date)*/
     } else {
         N_z = z_max - z0;
         xi0 = z0 * KMtoM + RADIUS_OF_EARTH;      /* xi0 = |r1 + t1d|*/
         t1 = -1.0*r1_d + std::sqrt(r1_d*r1_d + xi0*xi0 - r_1*r_1) - (-1.0*r1_d + std::sqrt(r1_d*r1_d)); /*[m]*/
-        delta1 = opt_vertical(z0-1, r1.latitude(), r1.longitude()) * t1 / 1e3;
+        delta1 = opt_vertical(z0-1, r1.latitude(), r1.longitude(), Lam, Day) * t1 / 1e3;
     }
 
     /*高度が同じ場合*/
@@ -57,7 +60,7 @@ double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){
         N_z = 0;
         t1 = std::sqrt((r1.x()-r2.x())*(r1.x()-r2.x()) + (r1.y()-r2.y())*(r1.y()-r2.y()) + (r1.z()-r2.z())*(r1.z()-r2.z())); 
         AndoLab::Vector3d <double> p = r1 + t1*d/2.0;
-        delta1 = opt_vertical(int((p.r()-RADIUS_OF_EARTH)*MtoKM), (r1.latitude() + r2.latitude())/2, (r1.longitude() + r2.longitude())/2) * t1 / 1e3;
+        delta1 = opt_vertical(int((p.r()-RADIUS_OF_EARTH)*MtoKM), (r1.latitude() + r2.latitude())/2, (r1.longitude() + r2.longitude())/2, Lam, Day) * t1 / 1e3;
     } else {
         delta1 = delta1;
     }  
@@ -74,7 +77,7 @@ double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){
         t_i = -1.0*r1_d + std::sqrt(r1_d*r1_d + xi_i*xi_i - r_1*r_1);
         t_i_1 = -1.0*r1_d + std::sqrt(r1_d*r1_d + xi_i_1*xi_i_1 - r_1*r_1);
 
-        delta2 = delta2 + opt_vertical(z_i, (r1 + t_i*d).latitude(), (r1 + t_i*d).longitude()) * (t_i - t_i_1) / 1e3;
+        delta2 = delta2 + opt_vertical(z_i, (r1 + t_i*d).latitude(), (r1 + t_i*d).longitude(), Lam, Day) * (t_i - t_i_1) / 1e3;
     }
 
     /*経路3の計算(delta3)*/
@@ -100,10 +103,11 @@ double opt_vec(AndoLab::Vector3d <double> &r2, AndoLab::Vector3d <double> &r1){
         t_R = 0.0;
      } 
     
-    delta3 = opt_vertical(z_max, r2.latitude(), r2.longitude()) * t_R / 1e3;
+    delta3 = opt_vertical(z_max, r2.latitude(), r2.longitude(), Lam, Day) * t_R / 1e3;
 
     /*任意の2点の光学的深さ*/
     double delta = delta1 + delta2 + delta3;
 
     return delta;
+
 }
